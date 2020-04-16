@@ -1,0 +1,10 @@
+.DS_Store
+.idea/*
+*~
+*.swp
+*.swo
+node_modules/
+.env
+dist/
+data
+peer-key/
