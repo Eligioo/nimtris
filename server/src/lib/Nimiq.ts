@@ -68,8 +68,7 @@ export default class NanoClient {
         0 /*fee*/,
         NanoClient.blockchain.height /*validityStartHeight*/)
       
-      const txResult = await NanoClient.consensus.sendTransaction(tx)
-      console.log(txResult)
+      await NanoClient.consensus.sendTransaction(tx)
 
     } catch (error) {
       console.log(error.message)

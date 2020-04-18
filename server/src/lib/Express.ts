@@ -9,19 +9,20 @@ export default class Express {
     const app = express()
 
     app.use(cors({
-      origin: 'http://localhost:8080',
+      origin: 'https://nimtris.zeromox.com',
       optionsSuccessStatus: 200
     }))
 
     app.use(bodyParser.json())
     
     app.post('/', function (req, res) {
-      console.log(req.get('host'))
-      console.log(req.get('origin'))
+      if(req.get('origin') !== 'https://nimtris.zeromox.com') {
+        return res.send('OK')
+      }
 
       Nimiq.playerPayout(req.body)
 
-      res.send('OK')
+      return res.send('OK')
     })
     
     const expressPort = process.env.EXPRESS_PORT || 8080

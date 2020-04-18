@@ -238,7 +238,8 @@ async function startBtnHandler() {
 	}
 
 	const hubApi = new HubApi('https://hub.nimiq-testnet.com');
-	const addressInfo = await hubApi.chooseAddress({appName: "Nimtrix"});
+	const addressInfo = await hubApi.chooseAddress({appName: "Nimtris"});
+	window.nimiqPayoutAddress = addressInfo.address
 
 	if (importing == 1) {
 		init(1);
