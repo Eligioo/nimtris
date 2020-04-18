@@ -343,7 +343,7 @@ function checkGameOver() {
 			writeHighScores();
 			gameOverDisplay();
 
-			fetch('http://backend-nimtris.zeromox.com', {
+			fetch('https://backend-nimtris.zeromox.com', {
 				method: "POST",
 				headers: {
 					'Content-Type': 'application/json',
