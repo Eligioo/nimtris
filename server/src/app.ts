@@ -1,10 +1,10 @@
 import dotenv from "dotenv";
 
-import LMDB from "./lib/LMDB"
+import Mongoose from "./lib/Mongoose"
 import Nimiq from "./lib/Nimiq"
 import Express from "./lib/Express"
 
 dotenv.config()
-LMDB.setup()
+Mongoose.connect()
 Express.setup()
 Nimiq.connect()
