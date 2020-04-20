@@ -143,9 +143,9 @@ function initialize(a) {
 		};
 		$('#startBtn').off();
 		if (settings.platform == 'mobile') {
-			$('#startBtn').on('touchstart', startBtnHandler);
+			$('#startBtn').on('click', startBtnHandler);
 		} else {
-			$('#startBtn').on('mousedown', startBtnHandler);
+			$('#startBtn').on('click', startBtnHandler);
 		}
 
 		document.addEventListener('touchmove', function(e) {
