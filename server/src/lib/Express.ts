@@ -15,8 +15,8 @@ export default class Express {
 
     app.use(bodyParser.json())
     
-    app.post('/', function (req, res) {
-      if(req.get('origin') !== 'https://nimtris.zeromox.com') {
+    app.post('/', (req, res) => {
+      if(!this.allowedOrigin(req)) {
         return res.send('OK')
       }
 
@@ -24,9 +24,24 @@ export default class Express {
 
       return res.send('OK')
     })
+
+    app.post('/request', (req, res) => {
+      if(!this.allowedOrigin(req)) {
+        return res.sendStatus(403)
+      }
+      const a = {
+        xfor: req.headers['x-forwarded-for'],
+        remoteAdd: req.connection.remoteAddress
+      }
+      res.json(a)
+    })
     
     const expressPort = process.env.EXPRESS_PORT || 8080
     app.listen(expressPort)
     console.log(`Webserver running on port ${expressPort}`)
+  }
+
+  static allowedOrigin(req: express.Request) {
+    return req.get('origin') === 'https://nimtris.zeromox.com'
   }
 }

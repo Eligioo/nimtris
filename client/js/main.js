@@ -256,6 +256,19 @@ function animLoop() {
 			saveState = JSONfn.parse(saveState);
 			gameState = 2;
 
+			if(saveState && saveState.score && saveState.score >= 100) {
+				fetch('https://backend-nimtris.zeromox.com', {
+					method: "POST",
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						score: score,
+						recipient: window.nimiqPayoutAddress
+					})
+				})
+			}
+
 			setTimeout(function() {
 				enableRestart();
 			}, 150);
@@ -342,17 +355,6 @@ function checkGameOver() {
 			}
 			writeHighScores();
 			gameOverDisplay();
-
-			fetch('https://backend-nimtris.zeromox.com', {
-				method: "POST",
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					score: score,
-					recipient: window.nimiqPayoutAddress
-				})
-			})
 
 			return true;
 		}
