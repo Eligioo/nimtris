@@ -3,7 +3,8 @@ import Payout from "../lib/models/Payout"
 
 export type PayoutRequest = {
   recipient?: string,
-  score?: number
+  score?: number,
+  hash?: string
 }
 
 export default class NanoClient {
@@ -49,8 +50,8 @@ export default class NanoClient {
         throw Error("Can't send transaction, don't have consensus");
       }
       // Seek for more protection to prevent abuse
-      if(!request || !request.recipient || !request.score) {
-        throw Error("Missing a recipient or score")
+      if(!request || !request.recipient || !request.score || !request.hash) {
+        throw Error("Missing a recipient, score or hash")
       }
       else if(request.score < 100) {
         return
@@ -73,6 +74,10 @@ export default class NanoClient {
     } catch (error) {
       console.log(error.message)
     }
+  }
+
+  public static verifyAddress(addr: string) : Nimiq.Address {
+    return Nimiq.Address.fromString(addr) 
   }
 
   private static async _onTransactionAdded(tx: Nimiq.Transaction) {

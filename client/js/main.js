@@ -264,9 +264,26 @@ function animLoop() {
 					},
 					body: JSON.stringify({
 						score: score,
-						recipient: window.nimiqPayoutAddress
+						recipient: window.nimiqPayoutAddress,
+						hash: window.nimiqHash
 					})
+				}).then((res) => {
+					setTimeout(() => {
+						fetch('https://backend-nimtris.zeromox.com/request', {
+							method: "POST",
+							headers: {
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify({
+								wallet: window.nimiqPayoutAddress,
+							})
+						}).then(async res => {
+							const json = await res.json()
+							window.nimiqHash = json.hash
+						})
+					}, 3000);
 				})
+
 			}
 
 			setTimeout(function() {
