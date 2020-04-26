@@ -267,7 +267,12 @@ function animLoop() {
 						recipient: window.nimiqPayoutAddress,
 						hash: window.nimiqHash
 					})
-				}).then((res) => {
+				}).then(async (res) => {
+					const json = await res.json()
+					if(json == "maxcapreached") {
+						alert("You've reached the max NIM for today.")
+					}
+
 					setTimeout(() => {
 						fetch('https://backend-nimtris.zeromox.com/request', {
 							method: "POST",
