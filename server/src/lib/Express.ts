@@ -26,8 +26,13 @@ export default class Express {
         return res.send("ok")
       }
 
+      const cap = await Nimiq.hasReachedRewardCap(req)
+      if(cap) {
+        return res.send("maxcapreached")
+      }
+
       const hash = await Hash.findOne({
-        ip: req.headers['x-forwarded-for'],
+        ip: req.headers['x-forwarded-for'] as string,
         wallet: req.body.recipient,
         hash: req.body.hash,
         used: false
@@ -40,7 +45,7 @@ export default class Express {
       hash.used = true
       await hash.save()
 
-      Nimiq.playerPayout(req.body)
+      Nimiq.playerPayout(req.body, req.headers['x-forwarded-for'] as string)
 
       return res.send('OK')
     })
@@ -54,15 +59,15 @@ export default class Express {
         Nimiq.verifyAddress(req.body.wallet)
 
         const hashes = await Hash.find({
-          ip: req.headers['x-forwarded-for'],
+          ip: req.headers['x-forwarded-for'] as string,
           wallet: req.body.wallet,
           used: false
         })
 
-        // No hashes found
+        // No unused hashes found
         if(hashes.length === 0) {
           const lastHash = await Hash.find({
-            ip: req.headers['x-forwarded-for'],
+            ip: req.headers['x-forwarded-for'] as string,
             wallet: req.body.wallet,
             used: true
           }).sort({created_at: 'desc'}).limit(1)
@@ -98,7 +103,7 @@ export default class Express {
         // Multiple hashes found
         else {
           await Hash.updateMany({
-            ip: req.headers['x-forwarded-for'],
+            ip: req.headers['x-forwarded-for'] as string,
             wallet: req.body.wallet,
             used: false
           }, {

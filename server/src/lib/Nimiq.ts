@@ -1,3 +1,4 @@
+import express from "express";
 import Nimiq from "@nimiq/core";
 import Payout from "../lib/models/Payout"
 
@@ -38,13 +39,13 @@ export default class NanoClient {
     NanoClient.consensus.on("established", () => {
       NanoClient.established = true
       NanoClient.consensus.subscribeAccounts([NanoClient.wallet.address])
-      NanoClient.mempool.on("transaction-added", NanoClient._onTransactionAdded)
+      // NanoClient.mempool.on("transaction-added", NanoClient._onTransactionAdded)
     })
 
     NanoClient.consensus.on("lost", () => NanoClient.established = false)
   }
 
-  public static async playerPayout(request: PayoutRequest) {
+  public static async playerPayout(request: PayoutRequest, ip: string) {
     try {
       if(!NanoClient.established) {
         throw Error("Can't send transaction, don't have consensus");
@@ -71,6 +72,14 @@ export default class NanoClient {
       
       await NanoClient.consensus.sendTransaction(tx)
 
+      const payout = new Payout({
+        txhash: tx.hash().toHex(),
+        luna: tx.value,
+        recipient: tx.recipient.toUserFriendlyAddress(),
+        ip: ip
+      })
+      payout.save()
+
     } catch (error) {
       console.log(error.message)
     }
@@ -80,19 +89,33 @@ export default class NanoClient {
     return Nimiq.Address.fromString(addr) 
   }
 
-  private static async _onTransactionAdded(tx: Nimiq.Transaction) {
-    try {
-      const doc = await Payout.findOne({txhash: tx.hash().toHex()})
-      if(tx.sender.equals(NanoClient.wallet.address) && !doc) {
-        const payout = new Payout({
-          txhash: tx.hash().toHex(),
-          luna: tx.value,
-          recipient: tx.recipient.toUserFriendlyAddress()
-        })
-        payout.save()
-      }
-    } catch (error) {
-      console.log(error.message)
+  public static async hasReachedRewardCap(req: express.Request) : Promise<boolean> {
+    if(!req.headers['x-forwarded-for']) {
+      return true
     }
+
+    const startDay = new Date();
+    startDay.setHours(0,0,0,0);
+
+    const endDay = new Date();
+    endDay.setHours(23,59,59,999);
+
+    const payouts = await Payout.find({
+      ip: req.headers['x-forwarded-for'] as string,
+      created_at: {$gte: startDay, $lt: endDay}
+    })
+
+    if(payouts.length === 0) {
+      return false
+    }
+
+    let total = 0
+    payouts.map(p => total += p.luna)
+    console.log(Nimiq.Policy.lunasToCoins(total))
+    if(Nimiq.Policy.lunasToCoins(total) < 50) {
+      return false
+    }
+
+    return true
   }
 }
