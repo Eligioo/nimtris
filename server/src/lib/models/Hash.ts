@@ -1,5 +1,15 @@
 import mongoose from 'mongoose';
 
+interface IHash {
+  ip: string,
+  hash: string,
+  wallet: string,
+  used: boolean,
+  created_at: Date
+}
+
+export interface IHashModel extends IHash, mongoose.Document { }
+
 const hashSchema = new mongoose.Schema({
     ip: {type: String, required: true},
     hash: {type: String, required: true},
@@ -12,4 +22,5 @@ const hashSchema = new mongoose.Schema({
   }
 );
 
-export default mongoose.model('Hash', hashSchema);
+const Hub: mongoose.Model<IHashModel> = mongoose.model<IHashModel>("Hash", hashSchema);
+export default Hub;
