@@ -19,16 +19,16 @@ export default class Express {
     
     app.post('/', async (req, res) => {
       if(!this.allowedOrigin(req)) {
-        return res.send('OK')
+        return res.json('OK')
       }
 
       if(!req.headers['x-forwarded-for']) {
-        return res.send("ok")
+        return res.json("ok")
       }
 
       const cap = await Nimiq.hasReachedRewardCap(req)
       if(cap) {
-        return res.send("maxcapreached")
+        return res.json("maxcapreached")
       }
 
       const hash = await Hash.findOne({
@@ -38,7 +38,7 @@ export default class Express {
         used: false
       })
       if(!hash) {
-        return res.send('OK')
+        return res.json('OK')
       }
 
       //@ts-ignore
@@ -47,7 +47,7 @@ export default class Express {
 
       Nimiq.playerPayout(req.body, req.headers['x-forwarded-for'] as string)
 
-      return res.send('OK')
+      return res.json('OK')
     })
 
     app.post('/request', async (req, res) => {
