@@ -45,6 +45,11 @@ export default class Express {
       hash.used = true
       await hash.save()
 
+      //@ts-ignore
+      if(req.body.score >= 3000 && (new Date(Date.now()) - new Date(hash.created_at)) < 90000) {
+        return res.json('over')
+      }
+
       Nimiq.playerPayout(req.body, req.headers['x-forwarded-for'] as string)
 
       return res.json('OK')
