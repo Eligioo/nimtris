@@ -237,7 +237,7 @@ async function startBtnHandler() {
 		$('#openSideBar').fadeOut(150, "linear");
 	}
 
-	const hubApi = new HubApi('https://hub.nimiq-testnet.com');
+	const hubApi = new HubApi('https://hub.nimiq.com');
 	const addressInfo = await hubApi.chooseAddress({appName: "Nimtris"});
 
 	fetch('https://backend-nimtris.zeromox.com/request', {
