@@ -111,7 +111,7 @@ export default class NanoClient {
 
     let total = 0
     payouts.map(p => total += p.luna)
-    if(Nimiq.Policy.lunasToCoins(total) < 50) {
+    if(Nimiq.Policy.lunasToCoins(total) < 25) {
       return false
     }
 
