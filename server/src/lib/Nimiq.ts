@@ -58,10 +58,10 @@ export default class NanoClient {
         return
       }
 
-      const floorRemainder = Math.floor(request.score / 100)
-      let reward = 0.1 * floorRemainder // 0.1 NIM per 100 points
-      if(reward > 20) { /* cap at 20 NIM */
-        reward = 20
+      const floorRemainder = Math.floor(request.score / 1000)
+      let reward = 0.1 * floorRemainder // 0.1 NIM per 1000 points
+      if(reward > 5) { /* cap at 5 NIM */
+        reward = 5
       }
 
       const tx = NanoClient.wallet.createTransaction(
@@ -114,7 +114,7 @@ export default class NanoClient {
     let total = 0
     payouts.map(p => total += p.luna)
     console.log(total)
-    if(Nimiq.Policy.lunasToCoins(total) < 25) {
+    if(Nimiq.Policy.lunasToCoins(total) < 10) {
       return false
     }
 
