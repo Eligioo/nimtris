@@ -105,12 +105,15 @@ export default class NanoClient {
       created_at: {$gte: startDay, $lt: endDay}
     })
 
+    console.log(payouts.length)
+
     if(payouts.length === 0) {
       return false
     }
 
     let total = 0
     payouts.map(p => total += p.luna)
+    console.log(total)
     if(Nimiq.Policy.lunasToCoins(total) < 25) {
       return false
     }
