@@ -58,8 +58,7 @@ export default class NanoClient {
         return
       }
 
-      const floorRemainder = Math.floor(request.score / 1000)
-      let reward = 0.1 * floorRemainder // 0.1 NIM per 1000 points
+      let reward = request.score / 10000 // 0.1 NIM per 1000 points
       if(reward > 5) { /* cap at 5 NIM */
         reward = 5
       }
@@ -105,15 +104,12 @@ export default class NanoClient {
       created_at: {$gte: startDay, $lt: endDay}
     })
 
-    console.log(payouts.length)
-
     if(payouts.length === 0) {
       return false
     }
 
     let total = 0
     payouts.map(p => total += p.luna)
-    console.log(total)
     if(Nimiq.Policy.lunasToCoins(total) < 10) {
       return false
     }
