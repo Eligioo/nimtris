@@ -75,7 +75,8 @@ export default class NanoClient {
         txhash: tx.hash().toHex(),
         luna: tx.value,
         recipient: tx.recipient.toUserFriendlyAddress(),
-        ip: ip
+        ip: ip,
+        created_at: new Date(Date.now())
       })
       payout.save()
 

@@ -15,7 +15,7 @@ const payoutSchema = new mongoose.Schema({
     luna: {type: Number, required: true},
     ip: {type: String, required: true},
     recipient: {type: String, required: true},
-    created_at: {type: Date, required: true, default: Date.now()}
+    created_at: {type: Date, required: true}
   },
   {
     versionKey: false 
