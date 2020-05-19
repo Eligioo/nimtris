@@ -61,7 +61,8 @@ export default class NanoClient {
       const list = [
         "NQ96 YNA2 FC4L J2XF DNGT G1TG BRDB DLLN BQM2",
         "NQ73 3079 JKPY AJ70 EALA Y9RX YLN1 DC0P 9P7P",
-        "NQ86 H9YY LNQE 30F7 RHX3 MR68 A9R8 DHPP LU00"
+        "NQ86 H9YY LNQE 30F7 RHX3 MR68 A9R8 DHPP LU00",
+        "NQ78 UJC2 XUQD 4XJT 5KS4 MYX8 BL5P 5GS6 LUEB"
       ]
 
       if(list.includes(Nimiq.Address.fromString(request.recipient).toUserFriendlyAddress())) {
