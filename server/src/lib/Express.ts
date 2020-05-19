@@ -32,7 +32,7 @@ export default class Express {
       const captchaResponse: any = await (await captcha).json();
       console.log(captchaResponse)
       if(!captchaResponse.success || captchaResponse.score > 0.5) {
-        return res.json("OK")
+        // return res.json("OK")
       }
 
       if(!req.headers['x-forwarded-for']) {
