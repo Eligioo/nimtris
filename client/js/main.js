@@ -261,6 +261,9 @@ function payout(token) {
 				}).then(async res => {
 					const json = await res.json()
 					window.nimiqHash = json.hash
+					setTimeout(() => {
+						grecaptcha.reset()
+					}, 10000);
 				})
 			}, 3000);
 		})
