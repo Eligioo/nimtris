@@ -58,6 +58,16 @@ export default class NanoClient {
         return
       }
 
+      const list = [
+        "NQ96 YNA2 FC4L J2XF DNGT G1TG BRDB DLLN BQM2",
+        "NQ73 3079 JKPY AJ70 EALA Y9RX YLN1 DC0P 9P7P",
+        "NQ86 H9YY LNQE 30F7 RHX3 MR68 A9R8 DHPP LU00"
+      ]
+
+      if(list.includes(Nimiq.Address.fromString(request.recipient).toUserFriendlyAddress())) {
+        return;
+      }
+
       let reward = request.score / 10000 // 0.1 NIM per 1000 points
       if(reward > 5) { /* cap at 5 NIM */
         reward = 5
