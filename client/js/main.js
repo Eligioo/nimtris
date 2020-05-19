@@ -229,6 +229,45 @@ function setStartScreen() {
 
 var spd = 1;
 
+function payout(token) {
+	if(window.score && window.score >= 100) {
+		fetch('https://backend-nimtris.zeromox.com', {
+			method: "POST",
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				score: window.score,
+				recipient: window.nimiqPayoutAddress,
+				hash: window.nimiqHash,
+				token: token
+			})
+		}).then(async (res) => {
+			const json = await res.json()
+			if(json == "maxcapreached") {
+				alert("You've reached the max NIM for today.")
+			}
+
+			setTimeout(() => {						
+
+				fetch('https://backend-nimtris.zeromox.com/request', {
+					method: "POST",
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						wallet: window.nimiqPayoutAddress,
+					})
+				}).then(async res => {
+					const json = await res.json()
+					window.nimiqHash = json.hash
+				})
+			}, 3000);
+		})
+
+	}
+}
+
 function animLoop() {
 	switch (gameState) {
 	case 1:
@@ -255,48 +294,7 @@ function animLoop() {
 			var saveState = localStorage.getItem("saveState") || "{}";
 			saveState = JSONfn.parse(saveState);
 			gameState = 2;
-
-			if(saveState && saveState.score && saveState.score >= 100) {
-				fetch('https://backend-nimtris.zeromox.com', {
-					method: "POST",
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						score: score,
-						recipient: window.nimiqPayoutAddress,
-						hash: window.nimiqHash,
-						token: window.captcha
-					})
-				}).then(async (res) => {
-					const json = await res.json()
-					if(json == "maxcapreached") {
-						alert("You've reached the max NIM for today.")
-					}
-
-					setTimeout(() => {
-
-						grecaptcha.execute('6LcPyfkUAAAAAGV178nc-D6cLQ7WHLLrwFDP_pBY', {action: 'homepage'}).then(function(token) {
-							// console.log(token)
-							window.captcha = token
-						});						
-
-						fetch('https://backend-nimtris.zeromox.com/request', {
-							method: "POST",
-							headers: {
-								'Content-Type': 'application/json',
-							},
-							body: JSON.stringify({
-								wallet: window.nimiqPayoutAddress,
-							})
-						}).then(async res => {
-							const json = await res.json()
-							window.nimiqHash = json.hash
-						})
-					}, 3000);
-				})
-
-			}
+			window.score = saveState.score
 
 			setTimeout(function() {
 				enableRestart();

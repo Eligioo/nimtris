@@ -240,11 +240,6 @@ async function startBtnHandler() {
 	const hubApi = new HubApi('https://hub.nimiq.com');
 	const addressInfo = await hubApi.chooseAddress({appName: "Nimtris"});
 
-	grecaptcha.execute('6LcPyfkUAAAAAGV178nc-D6cLQ7WHLLrwFDP_pBY', {action: 'homepage'}).then(function(token) {
-		// console.log(token)
-		window.captcha = token
-	});
-
 	fetch('https://backend-nimtris.zeromox.com/request', {
 		method: "POST",
 		headers: {

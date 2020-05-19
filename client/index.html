@@ -28,7 +28,7 @@
 		<script type='text/javascript' src="js/initialization.js"></script>
 		<script src="vendor/sweet-alert.min.js"></script>
 		<link rel="stylesheet" href="style/rrssb.css"/>
-		<script src="https://www.google.com/recaptcha/api.js?render=6LcPyfkUAAAAAGV178nc-D6cLQ7WHLLrwFDP_pBY"></script>
+		<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 	</head>
 	<body>
 		<canvas id="canvas"></canvas>
@@ -48,6 +48,12 @@
 		<div id="gameoverscreen">
 			<div id='container'>
 				<div class="GOTitle">Check your <a href="https://safe.nimiq.com" target="_blank">Nimiq Safe &#10148;</a></div>
+				<br>
+				<form action="javascript:payout(grecaptcha.getResponse());" method="POST">
+					<div class="g-recaptcha" data-sitekey="6LeyzfkUAAAAAH83iBjhpVmyiXPP5Nhsl1YA0QOa"></div>
+					<br/>
+					<input type="submit" value="Receive Reward!" style="height: 40px; width: 280px; font-size: 30px;">
+				</form>
 				<br>
 				<div id='gameOverBox' class='GOTitle'>GAME OVER</div>
 				<div id='cScore'>1843</div>
