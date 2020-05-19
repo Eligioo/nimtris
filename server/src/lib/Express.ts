@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
+import fetch from "node-fetch";
 
 import Nimiq from "./Nimiq";
 
@@ -18,8 +19,19 @@ export default class Express {
     app.use(bodyParser.json())
     
     app.post('/', async (req, res) => {
-      if(!this.allowedOrigin(req)) {
+      if(!this.allowedOrigin(req) || !req.body.token) {
         return res.json('OK')
+      }
+
+      const captcha = fetch('https://www.google.com/recaptcha/api/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `secret=${process.env.CAPTCHA}&response=${req.body.token}`
+      })
+
+      const captchaResponse: any = await (await captcha).json();
+      if(!captchaResponse.success || captchaResponse.score > 0.5) {
+        return res.json("OK")
       }
 
       if(!req.headers['x-forwarded-for']) {

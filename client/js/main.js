@@ -265,7 +265,8 @@ function animLoop() {
 					body: JSON.stringify({
 						score: score,
 						recipient: window.nimiqPayoutAddress,
-						hash: window.nimiqHash
+						hash: window.nimiqHash,
+						token: window.captcha
 					})
 				}).then(async (res) => {
 					const json = await res.json()
@@ -274,6 +275,12 @@ function animLoop() {
 					}
 
 					setTimeout(() => {
+
+						grecaptcha.execute('6LcPyfkUAAAAAGV178nc-D6cLQ7WHLLrwFDP_pBY', {action: 'homepage'}).then(function(token) {
+							// console.log(token)
+							window.captcha = token
+						});						
+
 						fetch('https://backend-nimtris.zeromox.com/request', {
 							method: "POST",
 							headers: {
