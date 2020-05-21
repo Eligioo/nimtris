@@ -239,24 +239,6 @@ async function startBtnHandler() {
 
 	const hubApi = new HubApi('https://hub.nimiq.com');
 	const addressInfo = await hubApi.chooseAddress({appName: "Nimtris"});
-
-	fetch('https://backend-nimtris.zeromox.com/request', {
-		method: "POST",
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({
-			wallet: addressInfo.address,
-		})
-	}).then(async res => {
-		const json = await res.json()
-		if(json == "maxcapreached") {
-			alert("You've reached the max NIM for today.")
-		}
-		window.nimiqHash = json.hash
-	})
-
-
 	window.nimiqPayoutAddress = addressInfo.address
 
 	if (importing == 1) {

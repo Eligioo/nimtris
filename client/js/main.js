@@ -110,6 +110,23 @@ function init(b) {
 	else {
 		$("#currentHighScore").text(highscores[0])
 	}
+
+	fetch('https://backend-nimtris.zeromox.com/request', {
+		method: "POST",
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			wallet: window.nimiqPayoutAddress,
+		})
+	}).then(async res => {
+		const json = await res.json()
+		if(json == "maxcapreached") {
+			alert("You've reached the max NIM for today.")
+		}
+		window.nimiqHash = json.hash
+	})
+	
 	infobuttonfading = true;
 	$("#pauseBtn").attr('src',"./images/btn_pause.svg");
 	hideUIElements();
@@ -247,25 +264,6 @@ function payout(token) {
 			if(json == "maxcapreached") {
 				alert("You've reached the max NIM for today.")
 			}
-
-			setTimeout(() => {						
-
-				fetch('https://backend-nimtris.zeromox.com/request', {
-					method: "POST",
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						wallet: window.nimiqPayoutAddress,
-					})
-				}).then(async res => {
-					const json = await res.json()
-					window.nimiqHash = json.hash
-					setTimeout(() => {
-						grecaptcha.reset()
-					}, 10000);
-				})
-			}, 3000);
 		})
 
 	}
