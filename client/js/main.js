@@ -120,6 +120,8 @@ function init(b) {
 			wallet: window.nimiqPayoutAddress,
 		})
 	}).then(async res => {
+		const payoutBtn = document.getElementById("payBtn")
+		payoutBtn.value = "Receive Reward!"
 		const json = await res.json()
 		if(json == "maxcapreached") {
 			alert("You've reached the max NIM for today.")
@@ -260,6 +262,8 @@ function payout(token) {
 				token: token
 			})
 		}).then(async (res) => {
+			const payoutBtn = document.getElementById("payBtn")
+			payoutBtn.value = "Reward Send!"
 			const json = await res.json()
 			if(json == "maxcapreached") {
 				alert("You've reached the max NIM for today.")
