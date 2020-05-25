@@ -263,7 +263,7 @@ function payout(token) {
 			})
 		}).then(async (res) => {
 			const payoutBtn = document.getElementById("payBtn")
-			payoutBtn.value = "Reward Send!"
+			payoutBtn.value = "Reward Sent!"
 			const json = await res.json()
 			if(json == "maxcapreached") {
 				alert("You've reached the max NIM for today.")
