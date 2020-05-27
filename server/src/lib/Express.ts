@@ -20,7 +20,7 @@ export default class Express {
     
     app.post('/', async (req, res) => {
       if(!this.allowedOrigin(req) || !req.body.token) {
-        return res.json('OK')
+        return res.json('Origin not allowed')
       }
 
       const captcha = fetch('https://www.google.com/recaptcha/api/siteverify', {
@@ -32,11 +32,11 @@ export default class Express {
       const captchaResponse: any = await (await captcha).json();
       console.log(captchaResponse)
       if(!captchaResponse.success) {
-        return res.json("OK")
+        return res.json("Invalid captcha")
       }
 
       if(!req.headers['x-forwarded-for']) {
-        return res.json("ok")
+        return res.json("Missing header")
       }
 
       const cap = await Nimiq.hasReachedRewardCap(req)
@@ -51,7 +51,7 @@ export default class Express {
         used: false
       })
       if(!hash) {
-        return res.json('OK')
+        return res.json('Invalid hash')
       }
 
       //@ts-ignore
