@@ -43,7 +43,7 @@ function drawScoreboard() {
 		renderText(trueCanvas.width / 2 + gdx + 6 * settings.scale, trueCanvas.height / 2 + gdy, 60, "rgb(236, 240, 241)", String.fromCharCode("0xf04b"), 'px FontAwesome');
 		renderText(trueCanvas.width / 2 + gdx + 6 * settings.scale, trueCanvas.height / 2.1 + gdy - 155 * settings.scale, 150, "#2c3e50", "Nimtris");
 		renderText(trueCanvas.width / 2 + gdx + 5 * settings.scale, h + 10, fontSize, "rgb(44,62,80)", 'Select your Nimiq wallet and play!');
-		renderText(trueCanvas.width / 2 + gdx + 5 * settings.scale, h + 50, fontSize, "rgb(44,62,80)", '1000 points = 0.1 NIM');
+		renderText(trueCanvas.width / 2 + gdx + 5 * settings.scale, h + 50, fontSize, "rgb(44,62,80)", '1000 points = 0.01 NIM');
 
 	} else if (gameState != 0 && textOpacity > 0) {
 		textOpacity -= 0.05;

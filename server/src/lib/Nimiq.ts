@@ -71,9 +71,9 @@ export default class NanoClient {
         return;
       }
 
-      let reward = request.score / 10000 // 0.1 NIM per 1000 points
-      if(reward > 5) { /* cap at 5 NIM */
-        reward = 5
+      let reward = request.score / 100000 // 0.01 NIM per 1000 points
+      if(reward > 0.5) { /* cap at 0.5 NIM */
+        reward = 0.5
       }
 
       const tx = NanoClient.wallet.createTransaction(
