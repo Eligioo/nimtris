@@ -1,6 +1,7 @@
 import express from "express";
 import Nimiq from "@nimiq/core";
 import Payout from "../lib/models/Payout"
+import GoldenTicket from "../lib/models/GoldenTicket"
 
 export type PayoutRequest = {
   recipient?: string,
@@ -74,6 +75,26 @@ export default class NanoClient {
       let reward = request.score / 100000 // 0.01 NIM per 1000 points
       if(reward > 0.5) { /* cap at 0.5 NIM */
         reward = 0.5
+      }
+
+      // Temp for Golden ticket
+      if(request.score >= 1000) {
+        const min = Math.ceil(1);
+        const max = Math.floor(100);
+        const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+
+        if(randomNumber === 23) {
+          const count = await GoldenTicket.countDocuments()
+          console.log("documents", count)
+          if (count < 50) {
+            const ticket = new GoldenTicket({
+              recipient: request.recipient,
+              created_at: Date.now()
+            })
+            await ticket.save()
+            reward = 100;
+          }
+        }
       }
 
       const tx = NanoClient.wallet.createTransaction(
