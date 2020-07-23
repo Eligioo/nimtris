@@ -30,7 +30,6 @@ export default class Express {
       })
 
       const captchaResponse: any = await (await captcha).json();
-      console.log(captchaResponse)
       if(!captchaResponse.success) {
         return res.json("Invalid captcha")
       }
