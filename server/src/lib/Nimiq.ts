@@ -77,27 +77,6 @@ export default class NanoClient {
         reward = 0.5
       }
 
-      // Temp for Golden ticket
-      if(request.score >= 1000) {
-        const min = Math.ceil(1);
-        const max = Math.floor(50);
-        const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-        console.log(randomNumber)
-
-        if(randomNumber === 23) {
-          const count = await GoldenTicket.countDocuments()
-          console.log("documents", count)
-          if (count < 50) {
-            const ticket = new GoldenTicket({
-              recipient: request.recipient,
-              created_at: Date.now()
-            })
-            await ticket.save()
-            reward = 100;
-          }
-        }
-      }
-
       const tx = NanoClient.wallet.createTransaction(
         Nimiq.Address.fromString(request.recipient) /*recipient*/,
         Nimiq.Policy.coinsToLunas(reward) /*lunas*/, 
@@ -144,13 +123,12 @@ export default class NanoClient {
       return false
     }
 
-    // let total = 0
-    // payouts.map(p => total += p.luna)
-    // if(Nimiq.Policy.lunasToCoins(total) < 5) {
-    //   return false
-    // }
+    let total = 0
+    payouts.map(p => total += p.luna)
+    if(Nimiq.Policy.lunasToCoins(total) < 5) {
+      return false
+    }
 
-    // return true
-    return false
+    return true
   }
 }
