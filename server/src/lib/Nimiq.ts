@@ -82,6 +82,7 @@ export default class NanoClient {
         const min = 1;	
         const max = 600;	
         const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;	
+        console.log(randomNumber);
 
         if(randomNumber === 300) {	
           const count = await GoldenTicket.countDocuments()	
