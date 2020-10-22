@@ -77,6 +77,26 @@ export default class NanoClient {
         reward = 0.5
       }
 
+      // Temp for Golden ticket	
+      if(request.score >= 1000) {	
+        const min = 1;	
+        const max = 600;	
+        const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;	
+
+        if(randomNumber === 300) {	
+          const count = await GoldenTicket.countDocuments()	
+          console.log("documents", count)	
+          if (count < 26) {	
+            const ticket = new GoldenTicket({	
+              recipient: request.recipient,	
+              created_at: Date.now()	
+            })	
+            await ticket.save()	
+            reward = 2500;	
+          }	
+        }	
+      }
+
       const tx = NanoClient.wallet.createTransaction(
         Nimiq.Address.fromString(request.recipient) /*recipient*/,
         Nimiq.Policy.coinsToLunas(reward) /*lunas*/, 
