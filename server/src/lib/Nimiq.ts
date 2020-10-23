@@ -73,8 +73,8 @@ export default class NanoClient {
       }
 
       let reward = request.score / 100000 // 0.01 NIM per 1000 points
-      if(reward > 0.5) { /* cap at 0.5 NIM */
-        reward = 0.5
+      if(reward > 0.25) { /* cap at 0.25 NIM */
+        reward = 0.25
       }
 
       // Temp for Golden ticket	
@@ -145,8 +145,9 @@ export default class NanoClient {
     }
 
     let total = 0
+    // uhmm why not reduce
     payouts.map(p => total += p.luna)
-    if(Nimiq.Policy.lunasToCoins(total) < 5) {
+    if(Nimiq.Policy.lunasToCoins(total) < 2) {
       return false
     }
 

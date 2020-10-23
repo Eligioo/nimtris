@@ -39,9 +39,9 @@ export default class Express {
       }
 
       const cap = await Nimiq.hasReachedRewardCap(req)
-      // if(cap) {
-      //   return res.json("maxcapreached")
-      // }
+      if(cap) {
+        return res.json("maxcapreached")
+      }
 
       const hash = await Hash.findOne({
         ip: req.headers['x-forwarded-for'] as string,
