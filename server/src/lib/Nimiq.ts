@@ -80,7 +80,7 @@ export default class NanoClient {
       // Temp for Golden ticket	
       if(request.score >= 1000) {	
         const min = 1;	
-        const max = 600;	
+        const max = 400;	
         const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;	
         console.log(randomNumber);
 
