@@ -80,11 +80,11 @@ export default class NanoClient {
       // Temp for Golden ticket	
       if(request.score >= 1000) {	
         const min = 1;	
-        const max = 400;	
+        const max = 200;	
         const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;	
         console.log(randomNumber);
 
-        if(randomNumber === 300) {	
+        if(randomNumber === 100) {	
           const count = await GoldenTicket.countDocuments()	
           console.log("documents", count)	
           if (count < 26) {	
