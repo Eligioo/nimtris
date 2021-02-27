@@ -5,7 +5,7 @@ Nimtris
 
 An addictive puzzle game inspired by Tetris. Nimtris has an additional feature: it integrated the Nimiq Hub. More infomation about [Nimiq](https://nimiq.com).
 
-Play it at [nimtris.zeromox.com](http://nimtris.zeromox.com). Game original source can be found here [github.com/Hextris/hextris](https://github.com/Hextris/hextris).
+Play it at [nimtris.com](http://nimtris.com). Game original source can be found here [github.com/Hextris/hextris](https://github.com/Hextris/hextris).
 
 ## License
 Copyright (C) 2018 Logan Engstrom

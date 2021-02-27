@@ -241,7 +241,7 @@ async function startBtnHandler() {
 	const addressInfo = await hubApi.chooseAddress({appName: "Nimtris"});
 	window.nimiqPayoutAddress = addressInfo.address
 
-	fetch('https://backend-nimtris.zeromox.com/request', {
+	fetch('https://backend.nimtris.com/request', {
 		method: "POST",
 		headers: {
 			'Content-Type': 'application/json',

@@ -111,7 +111,7 @@ function init(b) {
 		$("#currentHighScore").text(highscores[0])
 	}
 
-	fetch('https://backend-nimtris.zeromox.com/request', {
+	fetch('https://backend.nimtris.com/request', {
 		method: "POST",
 		headers: {
 			'Content-Type': 'application/json',
@@ -250,7 +250,7 @@ var spd = 1;
 
 function payout(token) {
 	if(window.score && window.score >= 100) {
-		fetch('https://backend-nimtris.zeromox.com', {
+		fetch('https://backend.nimtris.com', {
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json',

@@ -12,7 +12,7 @@ export default class Express {
     const app = express()
 
     app.use(cors({
-      origin: 'https://nimtris.zeromox.com',
+      origin: 'https://nimtris.com',
       optionsSuccessStatus: 200
     }))
 
@@ -151,7 +151,7 @@ export default class Express {
   }
 
   static allowedOrigin(req: express.Request) {
-    return req.get('origin') === 'https://nimtris.zeromox.com'
+    return req.get('origin') === 'https://nimtris.com'
   }
 
   static randomString() {
