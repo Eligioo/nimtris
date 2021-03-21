@@ -65,7 +65,8 @@ export default class NanoClient {
         "NQ86 H9YY LNQE 30F7 RHX3 MR68 A9R8 DHPP LU00",
         "NQ78 UJC2 XUQD 4XJT 5KS4 MYX8 BL5P 5GS6 LUEB",
         "NQ21 T7R0 2VXQ 5QGR Y5S9 SF4P K8AE VQ8Q V300",
-        "NQ36 2926 0A2J M4XD FJUU K8B5 ELD0 KSGT 782R"
+        "NQ36 2926 0A2J M4XD FJUU K8B5 ELD0 KSGT 782R",
+        "NQ04 EMLS A41G XYNG XS3M QTP8 DY56 G2R7 MTP5"
       ]
 
       if(list.includes(Nimiq.Address.fromString(request.recipient).toUserFriendlyAddress())) {
