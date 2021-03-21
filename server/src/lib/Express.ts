@@ -72,6 +72,14 @@ export default class Express {
         return res.sendStatus(403)
       }
 
+      const list = [
+        "115.85.5.230"
+      ]
+
+      if(list.includes(req.headers['x-forwarded-for'] as string)) {
+        return res.sendStatus(500)
+      }
+
       try {
         Nimiq.verifyAddress(req.body.wallet)
 
