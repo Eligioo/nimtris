@@ -73,11 +73,22 @@ export default class Express {
       }
 
       const list = [
-        "115.85.5.230"
+        "115.85.5.230",
+        "180.191.157.33"
       ]
 
       if(list.includes(req.headers['x-forwarded-for'] as string)) {
         return res.sendStatus(500)
+      }
+
+      let ip = req.headers['x-forwarded-for'] as string;
+      let split = ip.split(',');
+      if(split.length > 1) {
+        split.forEach(split_ip => {
+          if(list.includes(split_ip)) {
+            return res.sendStatus(500);
+          }
+        })
       }
 
       try {
