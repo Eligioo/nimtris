@@ -75,8 +75,8 @@ export default class NanoClient {
       }
 
       let reward = request.score / 100000 // 0.01 NIM per 1000 points
-      if(reward > 0.25) { /* cap at 0.25 NIM */
-        reward = 0.25
+      if(reward > 0.15) { /* cap at 0.15 NIM */
+        reward = 0.15
       }
 
       // Temp for Golden ticket	
