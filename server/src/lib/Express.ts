@@ -74,7 +74,9 @@ export default class Express {
 
       const list = [
         "115.85.5.230",
-        "180.191.157.33"
+        "180.191.157.33",
+        "51.79.164.208",
+        "46.193.65.53"
       ]
 
       if(list.includes(req.headers['x-forwarded-for'] as string)) {
