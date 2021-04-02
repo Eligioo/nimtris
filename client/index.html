@@ -28,7 +28,7 @@
 		<script type='text/javascript' src="js/initialization.js"></script>
 		<script src="vendor/sweet-alert.min.js"></script>
 		<link rel="stylesheet" href="style/rrssb.css"/>
-		<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+		<script src="https://hcaptcha.com/1/api.js" async defer></script>
 		<meta name="coinzilla" content="b0c421ffc97e4f17bb536da8bcc09cda" />
 		<meta name="a.validate.01" content="674991df44a6884e92ca572b99cd6f0746d7" />
 		<!-- <script>var _coinzilla_fp_id_ = "5686040dc6ed02d5799",  _coinzilla_fp_interval_ = "5"; </script>
@@ -63,8 +63,8 @@
 			<div id='container'>
 				<div class="GOTitle">Check your <a href="https://wallet.nimiq.com" target="_blank">Wallet &#10148;</a></div>
 				<br>
-				<form action="javascript:payout(grecaptcha.getResponse());" method="POST">
-					<div class="g-recaptcha" data-sitekey="6LeyzfkUAAAAAH83iBjhpVmyiXPP5Nhsl1YA0QOa"></div>
+				<form action="javascript:payout(hcaptcha.getResponse());" method="POST">
+					<div class="h-captcha" data-sitekey="YOUR-SITE-KEY"></div>
 					<br/>
 					<input type="submit" value="Receive Reward!" id="payBtn" style="height: 40px; width: 280px; font-size: 30px;">
 				</form>
