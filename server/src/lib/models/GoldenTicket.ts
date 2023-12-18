@@ -8,11 +8,11 @@ interface IGoldenTicket {
 export interface IGoldenTicketModel extends IGoldenTicket, mongoose.Document { }
 
 const goldenTicketSchema = new mongoose.Schema({
-    recipient: {type: String, required: true},
-    created_at: {type: Date, required: true}
-  },
+  recipient: { type: String, required: true },
+  created_at: { type: Date, required: true }
+},
   {
-    versionKey: false 
+    versionKey: false
   }
 );
 

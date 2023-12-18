@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import fetch from "node-fetch";
 
 import Nimiq from "./Nimiq";
 
@@ -17,9 +16,9 @@ export default class Express {
     }))
 
     app.use(bodyParser.json())
-    
+
     app.post('/', async (req, res) => {
-      if(!this.allowedOrigin(req) || !req.body.token) {
+      if (!this.allowedOrigin(req) || !req.body.token) {
         return res.json('Origin not allowed')
       }
 
@@ -30,16 +29,16 @@ export default class Express {
       })
 
       const captchaResponse: any = await (await captcha).json();
-      if(!captchaResponse.success) {
+      if (!captchaResponse.success) {
         return res.json("Invalid captcha")
       }
 
-      if(!req.headers['x-forwarded-for']) {
+      if (!req.headers['x-forwarded-for']) {
         return res.json("Missing header")
       }
 
       const cap = await Nimiq.hasReachedRewardCap(req)
-      if(cap) {
+      if (cap) {
         return res.json("maxcapreached")
       }
 
@@ -49,7 +48,7 @@ export default class Express {
         hash: req.body.hash,
         used: false
       })
-      if(!hash) {
+      if (!hash) {
         return res.json('Invalid hash')
       }
 
@@ -58,7 +57,7 @@ export default class Express {
       await hash.save()
 
       //@ts-ignore
-      if(req.body.score >= 3000 && (new Date(Date.now()) - new Date(hash.created_at)) < 90000) {
+      if (req.body.score >= 3000 && (new Date(Date.now()) - new Date(hash.created_at)) < 90000) {
         return res.json('over')
       }
 
@@ -68,7 +67,7 @@ export default class Express {
     })
 
     app.post('/request', async (req, res) => {
-      if(!this.allowedOrigin(req) || !req.headers['x-forwarded-for'] || !req.body.wallet) {
+      if (!this.allowedOrigin(req) || !req.headers['x-forwarded-for'] || !req.body.wallet) {
         return res.sendStatus(403)
       }
 
@@ -79,15 +78,15 @@ export default class Express {
         "46.193.65.53"
       ]
 
-      if(list.includes(req.headers['x-forwarded-for'] as string)) {
+      if (list.includes(req.headers['x-forwarded-for'] as string)) {
         return res.sendStatus(500)
       }
 
       let ip = req.headers['x-forwarded-for'] as string;
       let split = ip.split(',');
-      if(split.length > 1) {
+      if (split.length > 1) {
         split.forEach(split_ip => {
-          if(list.includes(split_ip)) {
+          if (list.includes(split_ip)) {
             return res.sendStatus(500);
           }
         })
@@ -103,16 +102,16 @@ export default class Express {
         })
 
         // No unused hashes found
-        if(hashes.length === 0) {
+        if (hashes.length === 0) {
           const lastHash = await Hash.find({
             ip: req.headers['x-forwarded-for'] as string,
             wallet: req.body.wallet,
             used: true
-          }).sort({created_at: 'desc'}).limit(1)
+          }).sort({ created_at: 'desc' }).limit(1)
 
-          if(lastHash.length > 0) {
+          if (lastHash.length > 0) {
             //@ts-ignore
-            if((new Date(Date.now()) - new Date(lastHash[0].created_at)) < 30000) {
+            if ((new Date(Date.now()) - new Date(lastHash[0].created_at)) < 30000) {
               return res.sendStatus(403)
             }
           }
@@ -132,7 +131,7 @@ export default class Express {
           })
         }
         // Exactly one hash found
-        else if(hashes.length === 1) {
+        else if (hashes.length === 1) {
           return res.json({
             // @ts-ignore
             hash: hashes[0].hash
@@ -161,11 +160,11 @@ export default class Express {
             hash: hash.hash
           })
         }
-       } catch (error) {
+      } catch (error) {
         return res.sendStatus(403)
       }
     })
-    
+
     const expressPort = process.env.EXPRESS_PORT || 8080
     app.listen(expressPort)
     console.log(`Webserver running on port ${expressPort}`)
@@ -176,11 +175,11 @@ export default class Express {
   }
 
   static randomString() {
-    let result           = '';
-    const characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
-    for ( var i = 0; i < 64; i++ ) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    for (var i = 0; i < 64; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
   }

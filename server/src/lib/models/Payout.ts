@@ -11,14 +11,14 @@ interface IPayout {
 export interface IPayoutModel extends IPayout, mongoose.Document { }
 
 const payoutSchema = new mongoose.Schema({
-    txhash: {type: String, required: true},
-    luna: {type: Number, required: true},
-    ip: {type: String, required: true},
-    recipient: {type: String, required: true},
-    created_at: {type: Date, required: true}
-  },
+  txhash: { type: String, required: true },
+  luna: { type: Number, required: true },
+  ip: { type: String, required: true },
+  recipient: { type: String, required: true },
+  created_at: { type: Date, required: true }
+},
   {
-    versionKey: false 
+    versionKey: false
   }
 );
 

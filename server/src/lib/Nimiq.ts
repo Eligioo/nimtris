@@ -17,7 +17,7 @@ export default class NanoClient {
   public static mempool: Nimiq.NanoMempool
   public static network: Nimiq.Network
   private static wallet: Nimiq.Wallet
-  
+
   public static async connect() {
     // Load wallet
     const pkHex = process.env.NIMIQ_PRIVATE_KEY_HEX as string
@@ -29,7 +29,7 @@ export default class NanoClient {
 
 
     console.log(`Connecting to the Nimiq ${process.env.NIMIQ_NETWORK} network...`)
-    process.env.NIMIQ_NETWORK === "main" ?  Nimiq.GenesisConfig.main() : Nimiq.GenesisConfig.test()
+    process.env.NIMIQ_NETWORK === "main" ? Nimiq.GenesisConfig.main() : Nimiq.GenesisConfig.test()
 
     NanoClient.consensus = await Nimiq.Consensus.nano()
     NanoClient.blockchain = NanoClient.consensus.blockchain
@@ -48,14 +48,14 @@ export default class NanoClient {
 
   public static async playerPayout(request: PayoutRequest, ip: string) {
     try {
-      if(!NanoClient.established) {
+      if (!NanoClient.established) {
         throw Error("Can't send transaction, don't have consensus");
       }
       // Seek for more protection to prevent abuse
-      if(!request || !request.recipient || !request.score || !request.hash) {
+      if (!request || !request.recipient || !request.score || !request.hash) {
         throw Error("Missing a recipient, score or hash")
       }
-      else if(request.score < 100) {
+      else if (request.score < 100) {
         return
       }
 
@@ -73,42 +73,41 @@ export default class NanoClient {
         "NQ21 30U0 GS0G VFKD 2A8M P6Y4 F896 PJ82 Q4HE"
       ]
 
-      if(list.includes(Nimiq.Address.fromString(request.recipient).toUserFriendlyAddress())) {
+      if (list.includes(Nimiq.Address.fromString(request.recipient).toUserFriendlyAddress())) {
         return;
       }
 
       let reward = request.score / 100000 // 0.01 NIM per 1000 points
-      if(reward > 0.15) { /* cap at 0.15 NIM */
+      if (reward > 0.15) { /* cap at 0.15 NIM */
         reward = 0.15
       }
 
       // Temp for Golden ticket	
-      if(request.score >= 1000) {	
-        const min = 1;	
-        const max = 200;	
-        const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;	
-        console.log(randomNumber);
+      // if (request.score >= 1000) {
+      //   const min = 1;
+      //   const max = 200;
+      //   const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
 
-        if(randomNumber === 100) {	
-          const count = await GoldenTicket.countDocuments()	
-          console.log("documents", count)	
-          if (count < 26) {	
-            const ticket = new GoldenTicket({	
-              recipient: request.recipient,	
-              created_at: Date.now()	
-            })	
-            await ticket.save()	
-            reward = 2500;	
-          }	
-        }	
-      }
+      //   if (randomNumber === 100) {
+      //     const count = await GoldenTicket.countDocuments()
+      //     console.log("documents", count)
+      //     if (count < 26) {
+      //       const ticket = new GoldenTicket({
+      //         recipient: request.recipient,
+      //         created_at: Date.now()
+      //       })
+      //       await ticket.save()
+      //       reward = 2500;
+      //     }
+      //   }
+      // }
 
       const tx = NanoClient.wallet.createTransaction(
         Nimiq.Address.fromString(request.recipient) /*recipient*/,
-        Nimiq.Policy.coinsToLunas(reward) /*lunas*/, 
+        Nimiq.Policy.coinsToLunas(reward) /*lunas*/,
         0 /*fee*/,
         NanoClient.blockchain.height /*validityStartHeight*/)
-      
+
       await NanoClient.consensus.sendTransaction(tx)
 
       const payout = new Payout({
@@ -121,38 +120,38 @@ export default class NanoClient {
       payout.save()
 
     } catch (error) {
-      console.log(error.message)
+      console.log(error)
     }
   }
 
-  public static verifyAddress(addr: string) : Nimiq.Address {
-    return Nimiq.Address.fromString(addr) 
+  public static verifyAddress(addr: string): Nimiq.Address {
+    return Nimiq.Address.fromString(addr)
   }
 
-  public static async hasReachedRewardCap(req: express.Request) : Promise<boolean> {
-    if(!req.headers['x-forwarded-for']) {
+  public static async hasReachedRewardCap(req: express.Request): Promise<boolean> {
+    if (!req.headers['x-forwarded-for']) {
       return true
     }
 
     const startDay = new Date();
-    startDay.setHours(0,0,0,0);
+    startDay.setHours(0, 0, 0, 0);
 
     const endDay = new Date();
-    endDay.setHours(23,59,59,999);
+    endDay.setHours(23, 59, 59, 999);
 
     const payouts = await Payout.find({
       ip: req.headers['x-forwarded-for'] as string,
-      created_at: {$gte: startDay, $lt: endDay}
+      created_at: { $gte: startDay, $lt: endDay }
     })
 
-    if(payouts.length === 0) {
+    if (payouts.length === 0) {
       return false
     }
 
     let total = 0
     // uhmm why not reduce
     payouts.map(p => total += p.luna)
-    if(Nimiq.Policy.lunasToCoins(total) < 1) {
+    if (Nimiq.Policy.lunasToCoins(total) < 1) {
       return false
     }
 

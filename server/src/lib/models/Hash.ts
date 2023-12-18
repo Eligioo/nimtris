@@ -11,14 +11,14 @@ interface IHash {
 export interface IHashModel extends IHash, mongoose.Document { }
 
 const hashSchema = new mongoose.Schema({
-    ip: {type: String, required: true},
-    hash: {type: String, required: true},
-    wallet: {type: String, required: true},
-    used: {type: Boolean, required: true, default: false},
-    created_at: {type: Date, required: true}
-  },
+  ip: { type: String, required: true },
+  hash: { type: String, required: true },
+  wallet: { type: String, required: true },
+  used: { type: Boolean, required: true, default: false },
+  created_at: { type: Date, required: true }
+},
   {
-    versionKey: false 
+    versionKey: false
   }
 );
 
