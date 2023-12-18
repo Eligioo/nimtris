@@ -6,6 +6,7 @@ export default class Mongoose {
       await mongoose.connect('mongodb://localhost/nimtrix');
       console.log("Connected with database...")
     } catch (error) {
+      console.log(error)
       process.exit()
     }
   }
