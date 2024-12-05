@@ -22,7 +22,7 @@ export default class Express {
         return res.json('Origin not allowed')
       }
 
-      const captcha = fetch('https://www.google.com/recaptcha/api/siteverify', {
+      const captcha = fetch('https://hcaptcha.com/siteverify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: `secret=${process.env.CAPTCHA}&response=${req.body.token}`
