@@ -1,5 +1,5 @@
 import express from "express";
-import Nimiq from "@nimiq/core";
+import { Address, BufferUtils, Client, ClientConfiguration, KeyPair, PrivateKey, TransactionBuilder } from "@nimiq/core";
 import Payout from "../lib/models/Payout"
 import GoldenTicket from "../lib/models/GoldenTicket"
 
@@ -10,45 +10,39 @@ export type PayoutRequest = {
 }
 
 export default class NanoClient {
-
-  public static blockchain: Nimiq.NanoChain
-  public static consensus: Nimiq.NanoConsensus
   public static established: boolean = false
-  public static mempool: Nimiq.NanoMempool
-  public static network: Nimiq.Network
-  private static wallet: Nimiq.Wallet
+  private static wallet: KeyPair
+  private static client: Client
 
   public static async connect() {
+    const clientConf = new ClientConfiguration()
+    switch (process.env.NIMIQ_NETWORK) {
+      case 'main':
+        clientConf.network('MainAlbatross');
+        break;
+      default:
+        clientConf.network('TestAlbatross');
+        clientConf.seedNodes(['/dns4/seed1.pos.nimiq-testnet.com/tcp/8443/wss']);
+        break;
+    }
+    clientConf.logLevel('info')
+
     // Load wallet
     const pkHex = process.env.NIMIQ_PRIVATE_KEY_HEX as string
-    const buf = Nimiq.BufferUtils.fromHex(pkHex)
-    const pk = Nimiq.PrivateKey.unserialize(buf)
-    const kp = Nimiq.KeyPair.derive(pk)
-    NanoClient.wallet = new Nimiq.Wallet(kp)
-    console.log(`Loaded ${NanoClient.wallet.address.toUserFriendlyAddress()}`)
-
-
+    const buf = BufferUtils.fromHex(pkHex)
+    const pk = PrivateKey.deserialize(buf)
+    this.wallet = KeyPair.derive(pk)
+    console.log(`Loaded ${this.wallet.publicKey.toAddress().toUserFriendlyAddress()}`)
     console.log(`Connecting to the Nimiq ${process.env.NIMIQ_NETWORK} network...`)
-    process.env.NIMIQ_NETWORK === "main" ? Nimiq.GenesisConfig.main() : Nimiq.GenesisConfig.test()
 
-    NanoClient.consensus = await Nimiq.Consensus.nano()
-    NanoClient.blockchain = NanoClient.consensus.blockchain
-    NanoClient.network = NanoClient.consensus.network
-    NanoClient.mempool = NanoClient.consensus.mempool
-    NanoClient.network.connect()
-
-    NanoClient.consensus.on("established", () => {
-      NanoClient.established = true
-      NanoClient.consensus.subscribeAccounts([NanoClient.wallet.address])
-      // NanoClient.mempool.on("transaction-added", NanoClient._onTransactionAdded)
-    })
-
-    NanoClient.consensus.on("lost", () => NanoClient.established = false)
+    this.client = await Client.create(clientConf.build());
+    await this.client.waitForConsensusEstablished()
+    this.established = true
   }
 
   public static async playerPayout(request: PayoutRequest, ip: string) {
     try {
-      if (!NanoClient.established) {
+      if (!this.established) {
         throw Error("Can't send transaction, don't have consensus");
       }
       // Seek for more protection to prevent abuse
@@ -73,7 +67,7 @@ export default class NanoClient {
         "NQ21 30U0 GS0G VFKD 2A8M P6Y4 F896 PJ82 Q4HE"
       ]
 
-      if (list.includes(Nimiq.Address.fromString(request.recipient).toUserFriendlyAddress())) {
+      if (list.includes(Address.fromString(request.recipient).toUserFriendlyAddress())) {
         return;
       }
 
@@ -102,17 +96,21 @@ export default class NanoClient {
       //   }
       // }
 
-      const tx = NanoClient.wallet.createTransaction(
-        Nimiq.Address.fromString(request.recipient) /*recipient*/,
-        Nimiq.Policy.coinsToLunas(reward) /*lunas*/,
-        0 /*fee*/,
-        NanoClient.blockchain.height /*validityStartHeight*/)
+      const tx = TransactionBuilder.newBasic(
+        this.wallet.publicKey.toAddress(),
+        Address.fromString(request.recipient),
+        BigInt(Math.trunc(reward * 1e5)),
+        BigInt(0),
+        await this.client.getHeadHeight(),
+        await this.client.getNetworkId()
+      )
 
-      await NanoClient.consensus.sendTransaction(tx)
+      this.wallet.signTransaction(tx)
+      await this.client.sendTransaction(tx)
 
       const payout = new Payout({
-        txhash: tx.hash().toHex(),
-        luna: tx.value,
+        txhash: tx.hash(),
+        luna: Number(tx.value),
         recipient: tx.recipient.toUserFriendlyAddress(),
         ip: ip,
         created_at: new Date(Date.now())
@@ -124,8 +122,8 @@ export default class NanoClient {
     }
   }
 
-  public static verifyAddress(addr: string): Nimiq.Address {
-    return Nimiq.Address.fromString(addr)
+  public static verifyAddress(addr: string): Address {
+    return Address.fromString(addr)
   }
 
   public static async hasReachedRewardCap(req: express.Request): Promise<boolean> {
@@ -151,7 +149,7 @@ export default class NanoClient {
     let total = 0
     // uhmm why not reduce
     payouts.map(p => total += p.luna)
-    if (Nimiq.Policy.lunasToCoins(total) < 1) {
+    if ((total / 1e5) < 5) {
       return false
     }
 
