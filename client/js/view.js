@@ -35,15 +35,15 @@ function drawScoreboard() {
 		scoreSize = 27;
 	}
 	//if (rush ==1){
-		var color = "rgb(236, 240, 241)";
+	var color = "rgb(236, 240, 241)";
 	//}
-    var fontSize = settings.platform == 'mobile' ? 35 : 30;
-    var h = trueCanvas.height / 2 + gdy + 100 * settings.scale;
+	var fontSize = settings.platform == 'mobile' ? 35 : 30;
+	var h = trueCanvas.height / 2 + gdy + 100 * settings.scale;
 	if (gameState === 0) {
 		renderText(trueCanvas.width / 2 + gdx + 6 * settings.scale, trueCanvas.height / 2 + gdy, 60, "rgb(236, 240, 241)", String.fromCharCode("0xf04b"), 'px FontAwesome');
 		renderText(trueCanvas.width / 2 + gdx + 6 * settings.scale, trueCanvas.height / 2.1 + gdy - 155 * settings.scale, 150, "#2c3e50", "Nimtris");
 		renderText(trueCanvas.width / 2 + gdx + 5 * settings.scale, h + 10, fontSize, "rgb(44,62,80)", 'Select your Nimiq wallet and play!');
-		renderText(trueCanvas.width / 2 + gdx + 5 * settings.scale, h + 50, fontSize, "rgb(44,62,80)", '1000 points = 0.01 NIM');
+		renderText(trueCanvas.width / 2 + gdx + 5 * settings.scale, h + 50, fontSize, "rgb(44,62,80)", '500 points = 0.01 NIM');
 
 	} else if (gameState != 0 && textOpacity > 0) {
 		textOpacity -= 0.05;
@@ -108,16 +108,16 @@ function showText(text) {
 		if (settings.os == 'android') {
 			text = 'pausedAndroid'
 		} else if (settings.os == 'ios') {
-            text = 'pausediOS'
-        } else if (settings.platform == 'nonmobile') {
-            text = 'pausedOther'
-        }
+			text = 'pausediOS'
+		} else if (settings.platform == 'nonmobile') {
+			text = 'pausedOther'
+		}
 	}
 
 	if (text == 'gameover') {
-	   //Clay('client.share.any', {text: 'Think you can beat my score of '+ score + ' in Super Cool Game?'})
+		//Clay('client.share.any', {text: 'Think you can beat my score of '+ score + ' in Super Cool Game?'})
 		$("#gameoverscreen").fadeIn();
-    	}
+	}
 	$(".overlay").html(messages[text]);
 	$(".overlay").fadeIn("1000", "swing");
 
@@ -126,30 +126,30 @@ function showText(text) {
 function setMainMenu() {
 	gameState = 4;
 	canRestart = false;
-	setTimeout(function() {
+	setTimeout(function () {
 		canRestart = 's';
 	}, 500);
 	$('#restartBtn').hide();
 	if ($("#pauseBtn").replace(/^.*[\\\/]/, '') == "btn_pause.svg") {
-		$("#pauseBtn").attr("src","./images/btn_resume.svg");
+		$("#pauseBtn").attr("src", "./images/btn_resume.svg");
 	} else {
-		$("#pauseBtn").attr("src","./images/btn_pause.svg");
+		$("#pauseBtn").attr("src", "./images/btn_pause.svg");
 	}
 }
 
 function hideText() {
-	$(".overlay").fadeOut(150, function() {
+	$(".overlay").fadeOut(150, function () {
 		$(".overlay").html("");
 	})
 }
 
 function gameOverDisplay() {
-	settings.ending_block=false;
-	Cookies.set("visited",true);
+	settings.ending_block = false;
+	Cookies.set("visited", true);
 	var c = document.getElementById("canvas");
 	c.className = "blur";
 	updateHighScores();
-	if (highscores.length === 0 ){
+	if (highscores.length === 0) {
 		$("#currentHighScore").text(0);
 	}
 	else {
@@ -160,21 +160,21 @@ function gameOverDisplay() {
 	$("#container").fadeIn();
 	$("#socialShare").fadeIn();
 	$("#restart").fadeIn();
-    set_score_pos();
+	set_score_pos();
 }
 
-function updateHighScores (){
-    $("#cScore").text(score);
-    $("#1place").text(highscores[0]);
-    $("#2place").text(highscores[1]);
-    $("#3place").text(highscores[2]);
+function updateHighScores() {
+	$("#cScore").text(score);
+	$("#1place").text(highscores[0]);
+	$("#2place").text(highscores[1]);
+	$("#3place").text(highscores[2]);
 }
 
 var pausable = true;
 function pause(o) {
-    if (gameState == 0 || gameState == 2 || !pausable) {
-        return;
-    }
+	if (gameState == 0 || gameState == 2 || !pausable) {
+		return;
+	}
 
 	pausable = false;
 	writeHighScores();
@@ -198,9 +198,9 @@ function pause(o) {
 		$('.helpText').fadeOut(300, 'linear');
 		$('#overlay').fadeOut(300, 'linear');
 		hideText();
-		setTimeout(function() {
+		setTimeout(function () {
 			gameState = prevGameState;
-			pausable =true;
+			pausable = true;
 		}, 400);
 	} else if (gameState != -2 && gameState !== 0 && gameState !== 2) {
 		$('#restartBtn').fadeIn(300, "linear");
@@ -210,11 +210,11 @@ function pause(o) {
 			showText(message);
 		}
 		$('#fork-ribbon').fadeIn(300, 'linear');
-		$("#pauseBtn").attr("src","./images/btn_resume.svg");
+		$("#pauseBtn").attr("src", "./images/btn_resume.svg");
 		$('#overlay').fadeIn(300, 'linear');
 		prevGameState = gameState;
-		setTimeout(function() {
-		    pausable = true;
+		setTimeout(function () {
+			pausable = true;
 		}, 400);
 		gameState = -1;
 	}
