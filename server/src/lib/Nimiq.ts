@@ -25,7 +25,7 @@ export default class NanoClient {
         clientConf.seedNodes(['/dns4/seed1.pos.nimiq-testnet.com/tcp/8443/wss']);
         break;
     }
-    clientConf.logLevel('info')
+    clientConf.logLevel('debug')
 
     // Load wallet
     const pkHex = process.env.NIMIQ_PRIVATE_KEY_HEX as string
