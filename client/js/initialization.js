@@ -237,9 +237,13 @@ async function startBtnHandler() {
 		$('#openSideBar').fadeOut(150, "linear");
 	}
 
-	const hubApi = new HubApi('https://hub.nimiq.com');
-	const addressInfo = await hubApi.chooseAddress({appName: "Nimtris"});
-	window.nimiqPayoutAddress = addressInfo.address
+	if (window.nimiq) {
+		window.nimiqPayoutAddress = (await window.nimiq.listAccounts())[0]
+	} else {
+		const hubApi = new HubApi('https://hub.nimiq.com');
+		const addressInfo = await hubApi.chooseAddress({ appName: "Nimtris" });
+		window.nimiqPayoutAddress = addressInfo.address
+	}
 
 	fetch('https://backend.nimtris.com/request', {
 		method: "POST",

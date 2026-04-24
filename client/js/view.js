@@ -160,6 +160,11 @@ function gameOverDisplay() {
 	$("#container").fadeIn();
 	$("#socialShare").fadeIn();
 	$("#restart").fadeIn();
+	if (window.nimiq) {
+		$("#checkWalletTitle").hide();
+	} else {
+		$("#checkWalletTitle").show();
+	}
 	set_score_pos();
 }
 
