@@ -32,7 +32,7 @@ function Hex(sideLength) {
 		var dy = Math.sin(angle) * obj.magnitude;
 		gdx -= dx;
 		gdy += dy;
-		obj.magnitude /= 2 * this.dt;
+		obj.magnitude *= Math.pow(0.5, this.dt);
 		if (obj.magnitude < 1) {
 			for (var i = 0; i < this.shakes.length; i++) {
 				if (this.shakes[i] == obj) {
@@ -153,12 +153,13 @@ function Hex(sideLength) {
 			this.angularVelocity += angularVelocityConst * this.dt;
 		}
 
-		if (Math.abs(this.angle - this.targetAngle + this.angularVelocity) <= Math.abs(this.angularVelocity)) { //do better soon
+		var step = this.angularVelocity * this.dt;
+		if (Math.abs(this.angle - this.targetAngle + step) <= Math.abs(step)) { //do better soon
 			this.angle = this.targetAngle;
 			this.angularVelocity = 0;
 		}
 		else {
-			this.angle += this.angularVelocity;
+			this.angle += step;
 		}
  
 		drawPolygon(this.x + gdx, this.y + gdy + this.dy, this.sides, this.sideLength, this.angle,arrayToColor(this.fillColor) , 0, 'rgba(0,0,0,0)');
