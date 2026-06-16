@@ -26,6 +26,7 @@ export default class NanoClient {
         break;
     }
     clientConf.logLevel('debug')
+    clientConf.syncMode('pico')
 
     // Load wallet
     const pkHex = process.env.NIMIQ_PRIVATE_KEY_HEX as string
